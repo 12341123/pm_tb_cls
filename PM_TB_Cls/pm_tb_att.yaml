@@ -1,0 +1,45 @@
+OUTPUT_DIR: "/ssd2/wangzd/pm_tb_3_att"
+MODEL:
+  PIXEL_MEAN: [ 0.485, 0.456, 0.406 ]
+  PIXEL_STD: [ 0.229, 0.224, 0.225 ]
+  WEIGHTS : "/home1/wangzd/wangzd_chexpert/weights/densenet121_d2_.pth"
+  BCE :
+    INPUTFEATURESIZE : 1024
+    BCECLASS : 3
+  META_ARCHITECTURE: "PMTB_CBAM_ClsNet"
+  BACKBONE:
+    NAME: "DenseNet"
+    FREEZE_AT: -1
+  CLSNET:
+    ENABLE: True
+    NUM_CLASSES: 2
+    INPUT_SIZE: 224
+    IN_FEATURES : ["dense4"]
+DATASETS:
+  TRAIN: ("194_train","206_train","fp_vbd","206_train_aug","fp_cangzhou","train_fp","train_fp",)
+  TEST: ("all_val", )
+#  TEST: ("tuixiang", )
+DATALOADER:
+  ASPECT_RATIO_GROUPING: False
+  NUM_WORKERS: 4
+SOLVER:
+  IMS_PER_BATCH: 12
+  BASE_LR: 0.0001
+  WEIGHT_DECAY: 0.05
+  STEPS: (10000,30000,50000,70000)
+  MAX_ITER: 200000
+  CHECKPOINT_PERIOD : 500
+  LR_SCHEDULER_NAME : "WarmupCosineLR"
+  OPTIMIZER : "AdamW"
+TEST:
+  EVAL_PERIOD: 500
+INPUT:
+  KEEP_ASPECT_RATIO : True
+  FORMAT: "RGB"
+  MIN_SIZE_TRAIN: (1024,)
+  MAX_SIZE_TRAIN: 1800
+  MIN_SIZE_TEST: 1024
+  MAX_SIZE_TEST: 1800
+  CROP:
+    ENABLED: False
+VERSION: 2
